@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import AllGames from "./pages/all-games/AllGames";
 import Container from "./components/container";
 import Dashboard from "./pages/dashboard";
 import GameLobby from "./pages/game-lobby";
@@ -17,15 +18,16 @@ function AppRoutes() {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/*" element={<ProtectedRoute />}>
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="all-games" element={<AllGames />} />
           <Route path="user/:user_id" element={<Container />}>
             <Route path="profile" element={<UserProfile />} />
           </Route>
           <Route path="game/:game_id" element={<Container />}>
             <Route
-              path="current-leaderboard"
+              path="leaderboard-present"
               element={<LeaderboardPresent />}
             />
-            <Route path="past-leaderboard" element={<LeaderboardPast />} />
+            <Route path="leaderboard-past" element={<LeaderboardPast />} />
             <Route path="lobby" element={<GameLobby />} />
           </Route>
         </Route>
