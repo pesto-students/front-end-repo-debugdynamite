@@ -6,15 +6,71 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../configs/firebaseConfig";
+// import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { SAVE_USER_URI } from "../constants/endPoints";
+import postDataPublic from "../services/postDataPublic";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState();
 
-  const googleSignIn = () => {
+  // const queryClient = useQueryClient();
+
+  // const { mutate, isLoading } = useMutation(
+  //   (newData) => postDataPublic(SAVE_USER_URI, newData),
+  //   {
+  //     onSuccess: (data) => {
+  //       console.log("mutation success: ", data);
+  //     },
+  //     onError: () => {
+  //       console.log("mutation error! ");
+  //     },
+  //     onSettled: () => {
+  //       queryClient.invalidateQueries("create");
+  //     },
+  //   }
+  // );
+
+  const googleSignIn = async () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider);
+    const result = await signInWithPopup(auth, provider);
+
+    try {
+      const { uid, email, displayName, photoURL } = result.user;
+
+      const userData = await postDataPublic(SAVE_USER_URI, {
+        uid,
+        email,
+        displayName,
+        photoURL,
+      });
+
+      console.log(userData);
+
+      // mutate({
+      //   uid,
+      //   email,
+      //   displayName,
+      //   photoURL,
+      // });
+
+      const isNewUser = result._tokenResponse.isNewUser;
+
+      if (isNewUser) {
+        console.log("New user signed up!");
+        // Perform actions for new users, e.g., initialize additional data
+      } else {
+        console.log("Existing user signed in!");
+        // Perform actions for existing users
+      }
+
+      // Access the user information
+      const user = result.user;
+      console.log("User details:", user);
+    } catch (error) {
+      console.error("Error signing in with Google:", error.message);
+    }
   };
 
   const logOut = () => {

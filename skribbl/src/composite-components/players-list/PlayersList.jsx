@@ -21,9 +21,9 @@ function PlayersList({ playersInfo }) {
       <List
         dataSource={playersInfo}
         renderItem={(playerInfo) => (
-          <div key={playerInfo.id} className="m-1">
+          <div key={playerInfo.playerId} className="m-1">
             <PlayersListContainer
-              image={playerInfo.image}
+              image={playerInfo.profileUrl}
               name={playerInfo.name}
               gamesPlayed={playerInfo.gamesPlayed}
               points={playerInfo.points}

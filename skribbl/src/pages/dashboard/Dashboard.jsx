@@ -1,15 +1,35 @@
 import React from "react";
 import UserActionButton from "./components/user-action-button/UserActionButton";
 import Button from "../../components/button/Button";
-import { recentGames, actionButtons } from "./mockData";
+import { actionButtons } from "./consts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import RecentGames from "../../composite-components/recent-games/RecentGames";
+import { UserAuth } from "../../context/AuthContext";
+import { getUserGamesURI } from "../../constants/endPoints";
+import getDataPrivate from "../../services/getDataPrivate";
+import { useQuery } from "@tanstack/react-query";
 
 function Dashboard() {
   const handlePlay = () => {
     alert("Not Implemented!");
   };
+
+  const { user } = UserAuth();
+  const USER_GAMES_URI = getUserGamesURI(user.uid);
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: [USER_GAMES_URI],
+    queryFn: () => getDataPrivate(USER_GAMES_URI, user),
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error fetching data: {error.message}</div>;
+  }
 
   const renderLogo = () => {
     return <div className="m-4 font-bold text-2xl">Skribbl</div>;
@@ -44,7 +64,7 @@ function Dashboard() {
   const renderRecentGames = () => {
     return (
       <RecentGames
-        recentGames={recentGames}
+        recentGames={data}
         header="Recent games"
         numberOfGamesToRender={4}
       />
