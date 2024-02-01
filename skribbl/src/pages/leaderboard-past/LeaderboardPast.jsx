@@ -3,35 +3,23 @@ import PlayersList from "../../composite-components/players-list/PlayersList";
 import PlayerPosition from "./components/player-position/PlayerPosition";
 import { UserAuth } from "../../context/AuthContext";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { leaderboardReader, playersInfoReader } from "../../readers";
-
-import axios from "../../api/axios";
+import { useLeaderBoardData } from "../../api/hooks";
 
 function getPlayerRank(data, playerId) {
-  // Find the player with the given playerId in the playersInfo array
   const player = leaderboardReader
     .playersInfo(data)
     .find((player) => playersInfoReader.playerId(player) === playerId);
 
-  // If the player is found, return their rank; otherwise, return null
   return player ? playersInfoReader.rank(player) : null;
 }
-
-const fetchLeaderboardData = async (gameId) => {
-  const { data } = await axios.get("/game/" + gameId + "/leaderboard");
-  return data;
-};
 
 function LeaderboardPast() {
   const { gameId } = useParams();
 
   const { user } = UserAuth();
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["leaderboard", gameId],
-    queryFn: () => fetchLeaderboardData(gameId),
-  });
+  const { data, error, isLoading } = useLeaderBoardData(gameId);
 
   if (isLoading) {
     return <div>Loading...</div>;

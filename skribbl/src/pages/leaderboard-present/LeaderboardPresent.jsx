@@ -2,23 +2,13 @@ import Hero from "../../composite-components/hero/Hero";
 import TopPlayers from "./components/top-players/TopPlayers";
 import PlayersList from "../../composite-components/players-list/PlayersList";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { leaderboardReader } from "../../readers";
-
-import axios from "../../api/axios";
-
-const fetchLeaderboardData = async (gameId) => {
-  const { data } = await axios.get("/game/" + gameId + "/leaderboard");
-  return data;
-};
+import { useLeaderBoardData } from "../../api/hooks";
 
 function LeaderboardPresent() {
   const { gameId } = useParams();
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["leaderboard", gameId],
-    queryFn: () => fetchLeaderboardData(gameId),
-  });
+  const { data, error, isLoading } = useLeaderBoardData(gameId);
 
   if (isLoading) {
     return <div>Loading...</div>;

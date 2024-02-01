@@ -5,27 +5,14 @@ import { actionButtons } from "./consts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import RecentGames from "../../composite-components/recent-games/RecentGames";
-import { UserAuth } from "../../context/AuthContext";
-import { useQuery } from "@tanstack/react-query";
-
-import axios from "../../api/axios";
-
-const fetchUserGames = async (userId) => {
-  const { data } = await axios.get("/user/" + userId + "/games");
-  return data;
-};
+import { useUserGamesData } from "../../api/hooks/";
 
 function Dashboard() {
   const handlePlay = () => {
     alert("Not Implemented!");
   };
 
-  const { user } = UserAuth();
-
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["user_games", user.uid],
-    queryFn: () => fetchUserGames(user.uid),
-  });
+  const { data, error, isLoading } = useUserGamesData();
 
   if (isLoading) {
     return <div>Loading...</div>;
