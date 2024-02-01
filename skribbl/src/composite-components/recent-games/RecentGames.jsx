@@ -9,6 +9,8 @@ import {
   getPastLeaderBoardRoute,
 } from "../../constants/routes";
 
+import { userGamesReader } from "../../readers";
+
 function RecentGames({
   header,
   recentGames,
@@ -48,14 +50,14 @@ function RecentGames({
         <List
           dataSource={gamesToRender}
           renderItem={(game) => (
-            <div key={game.game_id} className="m-3">
-              <Link to={getPastLeaderBoardRoute(game.game_id)}>
+            <div key={userGamesReader.gameId(game)} className="m-3">
+              <Link to={getPastLeaderBoardRoute(userGamesReader.gameId(game))}>
                 <GamesListContainer
-                  images={game.images}
-                  date={game.date}
-                  time={game.time}
-                  money={game.money}
-                  isMoneyGained={game.isMoneyGained}
+                  images={userGamesReader.images(game)}
+                  date={userGamesReader.date(game)}
+                  time={userGamesReader.time(game)}
+                  money={userGamesReader.money(game)}
+                  isMoneyGained={userGamesReader.isMoneyGained(game)}
                 />
               </Link>
             </div>

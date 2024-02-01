@@ -1,6 +1,7 @@
 import { Avatar } from "flowbite-react";
 import PlayersListContainer from "../players-list-container/PlayersListContainer";
 import List from "../../components/list/List";
+import { playersInfoReader } from "../../readers";
 
 function PlayersList({ playersInfo }) {
   const renderRankHeader = () => {
@@ -21,13 +22,13 @@ function PlayersList({ playersInfo }) {
       <List
         dataSource={playersInfo}
         renderItem={(playerInfo) => (
-          <div key={playerInfo.playerId} className="m-1">
+          <div key={playersInfoReader.playerId(playerInfo)} className="m-1">
             <PlayersListContainer
-              image={playerInfo.profileUrl}
-              name={playerInfo.name}
-              gamesPlayed={playerInfo.gamesPlayed}
-              points={playerInfo.points}
-              coins={playerInfo.coins}
+              image={playersInfoReader.profileUrl(playerInfo)}
+              name={playersInfoReader.name(playerInfo)}
+              gamesPlayed={playersInfoReader.gamesPlayed(playerInfo)}
+              points={playersInfoReader.points(playerInfo)}
+              coins={playersInfoReader.coins(playerInfo)}
             />
           </div>
         )}

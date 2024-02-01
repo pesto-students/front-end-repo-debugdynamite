@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../configs/firebaseConfig";
 // import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SAVE_USER_URI } from "../constants/endPoints";
+import { USER_URI } from "../constants/endPoints";
 import postDataPublic from "../services/postDataPublic";
 
 export const AuthContext = createContext();
@@ -18,7 +18,7 @@ export const AuthContextProvider = ({ children }) => {
   // const queryClient = useQueryClient();
 
   // const { mutate, isLoading } = useMutation(
-  //   (newData) => postDataPublic(SAVE_USER_URI, newData),
+  //   (newData) => postDataPublic(USER_URI, newData),
   //   {
   //     onSuccess: (data) => {
   //       console.log("mutation success: ", data);
@@ -39,7 +39,7 @@ export const AuthContextProvider = ({ children }) => {
     try {
       const { uid, email, displayName, photoURL } = result.user;
 
-      const userData = await postDataPublic(SAVE_USER_URI, {
+      const userData = await postDataPublic(USER_URI, {
         uid,
         email,
         displayName,

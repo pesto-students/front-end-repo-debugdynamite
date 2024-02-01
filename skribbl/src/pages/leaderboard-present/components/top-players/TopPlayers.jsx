@@ -1,11 +1,12 @@
 import { Avatar } from "flowbite-react";
 import React from "react";
 import { getPositionSuffix } from "../../../../utils";
+import { leaderboardReader, playersInfoReader } from "../../../../readers";
 
 const headerClassName = "flex justify-center m-4 font-bold text-lg";
 
 function TopPlayers({ leaderboardData, displayPlayersMaxLength = 3 }) {
-  let players = leaderboardData.playersInfo;
+  let players = leaderboardReader.playersInfo(leaderboardData);
   let totalPlayers = players.length;
   let displayPlayers = players.slice(
     0,
@@ -17,9 +18,14 @@ function TopPlayers({ leaderboardData, displayPlayersMaxLength = 3 }) {
       <div className="flex justify-center">
         {displayPlayers.map((player) => (
           <div className="mx-6 flex flex-col items-center">
-            <Avatar img={player.profileUrl} rounded size="lg" />
+            <Avatar
+              img={playersInfoReader.profileUrl(player)}
+              rounded
+              size="lg"
+            />
             <div className="text-center mt-2 font-bold">
-              {player.rank + getPositionSuffix(player.rank)}
+              {playersInfoReader.rank(player) +
+                getPositionSuffix(playersInfoReader.rank(player))}
             </div>
           </div>
         ))}

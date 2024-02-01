@@ -6,9 +6,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import RecentGames from "../../composite-components/recent-games/RecentGames";
 import { UserAuth } from "../../context/AuthContext";
-import { getUserGamesURI } from "../../constants/endPoints";
-import getDataPrivate from "../../services/getDataPrivate";
 import { useQuery } from "@tanstack/react-query";
+
+import axios from "../../api/axios";
+
+const fetchUserGames = async (userId) => {
+  const { data } = await axios.get("/user/" + userId + "/games");
+  return data;
+};
 
 function Dashboard() {
   const handlePlay = () => {
@@ -16,11 +21,10 @@ function Dashboard() {
   };
 
   const { user } = UserAuth();
-  const USER_GAMES_URI = getUserGamesURI(user.uid);
 
   const { data, error, isLoading } = useQuery({
-    queryKey: [USER_GAMES_URI],
-    queryFn: () => getDataPrivate(USER_GAMES_URI, user),
+    queryKey: ["user_games", user.uid],
+    queryFn: () => fetchUserGames(user.uid),
   });
 
   if (isLoading) {

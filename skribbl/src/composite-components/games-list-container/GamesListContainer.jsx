@@ -34,6 +34,7 @@ function GamesListContainer({ images, date, time, money, isMoneyGained }) {
       </div>
     );
   };
+
   return (
     <div style={listItemStyles}>
       {renderPlayersAndTime()}

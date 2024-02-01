@@ -26,7 +26,7 @@ function DateTimeDisplay({ date, time }) {
     );
   };
   return (
-    <div>
+    <div className="flex flex-col items-start">
       {renderTime()}
       {renderDate()}
     </div>

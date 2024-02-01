@@ -31,8 +31,10 @@ function PlayersListContainer({
   const renderScore = () => {
     return (
       <div style={{ display: "flex", alignItems: "center" }}>
-        <div className="font-bold m-4 text-xl">{points}</div>
-        <div className="font-bold m-4 text-yellow-400 text-xl">{coins}</div>
+        <div className="font-bold text-xl">{points}</div>
+        <div className="font-bold mr-4 ml-7 text-yellow-400 text-xl">
+          {coins}
+        </div>
       </div>
     );
   };

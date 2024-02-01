@@ -2,20 +2,22 @@ import Hero from "../../composite-components/hero/Hero";
 import TopPlayers from "./components/top-players/TopPlayers";
 import PlayersList from "../../composite-components/players-list/PlayersList";
 import { useParams } from "react-router-dom";
-import { UserAuth } from "../../context/AuthContext";
-import { getLeaderBoardURI } from "../../constants/endPoints";
 import { useQuery } from "@tanstack/react-query";
-import getDataPrivate from "../../services/getDataPrivate";
+import { leaderboardReader } from "../../readers";
+
+import axios from "../../api/axios";
+
+const fetchLeaderboardData = async (gameId) => {
+  const { data } = await axios.get("/game/" + gameId + "/leaderboard");
+  return data;
+};
 
 function LeaderboardPresent() {
   const { gameId } = useParams();
 
-  const { user } = UserAuth();
-  const LEADERBOARD_URI = getLeaderBoardURI(gameId);
-
   const { data, error, isLoading } = useQuery({
-    queryKey: [LEADERBOARD_URI],
-    queryFn: () => getDataPrivate(LEADERBOARD_URI, user),
+    queryKey: ["leaderboard", gameId],
+    queryFn: () => fetchLeaderboardData(gameId),
   });
 
   if (isLoading) {
@@ -28,14 +30,14 @@ function LeaderboardPresent() {
 
   const renderHero = () => {
     return (
-      <Hero entryFees={data.entryFees}>
+      <Hero entryFees={leaderboardReader.entryFees(data)}>
         <TopPlayers leaderboardData={data} />
       </Hero>
     );
   };
 
   const renderPlayerList = () => {
-    return <PlayersList playersInfo={data.playersInfo} />;
+    return <PlayersList playersInfo={leaderboardReader.playersInfo(data)} />;
   };
 
   return (

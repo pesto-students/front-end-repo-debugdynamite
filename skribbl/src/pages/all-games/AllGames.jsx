@@ -3,19 +3,22 @@ import RecentGames from "../../composite-components/recent-games/RecentGames";
 import BackButton from "../../components/back-button/BackButton";
 import { DASHBOARD_ROUTE } from "../../constants/routes";
 import { UserAuth } from "../../context/AuthContext";
-import { getUserGamesURI } from "../../constants/endPoints";
 import { useQuery } from "@tanstack/react-query";
-import getDataPrivate from "../../services/getDataPrivate";
+import axios from "../../api/axios";
+
+const fetchUserGames = async (userId) => {
+  const { data } = await axios.get("/user/" + userId + "/games");
+  return data;
+};
 
 const backButtonClassName = "m-4";
 
 function AllGames() {
   const { user } = UserAuth();
-  const USER_GAMES_URI = getUserGamesURI(user.uid);
 
   const { data, error, isLoading } = useQuery({
-    queryKey: [USER_GAMES_URI],
-    queryFn: () => getDataPrivate(USER_GAMES_URI, user),
+    queryKey: ["user_games", user.uid],
+    queryFn: () => fetchUserGames(user.uid),
   });
 
   if (isLoading) {

@@ -1,6 +1,6 @@
-const BASE_URL = "http://localhost:3001/api/";
+const BASE_URI = "http://localhost:3001/api/";
 
-export const SAVE_USER_URI = BASE_URL + "user/save";
-export const getUserGamesURI = (userId) => BASE_URL + `user/${userId}/games`;
+export const USER_URI = BASE_URI + "user/";
+export const getUserGamesURI = (userId) => BASE_URI + `user/${userId}/games`;
 export const getLeaderBoardURI = (gameId) =>
-  BASE_URL + `game/${gameId}/leaderboard`;
+  BASE_URI + `game/${gameId}/leaderboard`;
