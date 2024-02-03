@@ -43,6 +43,7 @@ function Dashboard() {
       <div className="flex justify-center items-center m-8">
         {actionButtons.map((actionButton) => (
           <UserActionButton
+            key={actionButton.id}
             icon={process.env.PUBLIC_URL + actionButton.icon}
             label={actionButton.label}
             backgroundColor={actionButton.backgroundColor}

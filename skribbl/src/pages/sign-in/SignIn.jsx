@@ -1,11 +1,33 @@
 import React, { useEffect } from "react";
 import { GoogleButton } from "react-google-button";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { UserAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../../configs/firebaseConfig";
+
+import axios from "../../api/axios";
 
 const Signin = () => {
-  const { googleSignIn, user } = UserAuth();
+  const { user } = UserAuth();
   const navigate = useNavigate();
+
+  const googleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+
+    try {
+      const { uid, email, displayName, photoURL } = result.user;
+
+      axios.post("/user", {
+        uid,
+        email,
+        displayName,
+        photoURL,
+      });
+    } catch (error) {
+      console.error("Error signing in with Google:", error.message);
+    }
+  };
 
   const handleGoogleSignIn = async () => {
     try {
@@ -19,7 +41,7 @@ const Signin = () => {
     if (user != null) {
       navigate("/");
     }
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <div>

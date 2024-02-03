@@ -16,7 +16,7 @@ const ChatComponent = () => {
       const token = await user.getIdToken();
 
       // Connect to the server with the token as part of the authentication
-      const newSocket = io("http://localhost:3001", {
+      const newSocket = io("http://localhost:3001/", {
         transports: ["websocket", "polling"],
         auth: {
           token,
