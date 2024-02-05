@@ -1,16 +1,16 @@
 import React from "react";
 import UserActionButton from "./components/user-action-button/UserActionButton";
-import Button from "../../components/button/Button";
+import Button from "../../components/button";
 import { actionButtons } from "./consts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import RecentGames from "../../composite-components/recent-games/RecentGames";
 import { useUserGamesData } from "../../api/hooks/";
+import { useNavigate } from "react-router-dom";
+import { JOIN_GAME_ROUTE } from "../../constants/routes";
 
 function Dashboard() {
-  const handlePlay = () => {
-    alert("Not Implemented!");
-  };
+  const navigate = useNavigate();
 
   const { data, error, isLoading } = useUserGamesData();
 
@@ -21,6 +21,10 @@ function Dashboard() {
   if (error) {
     return <div>Error fetching data: {error.message}</div>;
   }
+
+  const handlePlay = () => {
+    navigate(JOIN_GAME_ROUTE);
+  };
 
   const renderLogo = () => {
     return <div className="m-4 font-bold text-2xl">Skribbl</div>;
@@ -66,7 +70,15 @@ function Dashboard() {
   const renderPlayButton = () => {
     return (
       <div className="flex justify-center items-center my-8">
-        <Button onClick={handlePlay}>PLAY</Button>
+        <Button
+          isRounded
+          textSize="2xl"
+          paddingX="8"
+          paddingY="2"
+          onClick={handlePlay}
+        >
+          PLAY
+        </Button>
       </div>
     );
   };

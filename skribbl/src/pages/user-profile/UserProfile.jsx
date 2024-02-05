@@ -1,6 +1,6 @@
 import React from "react";
 import { signOut } from "firebase/auth";
-import { UserAuth } from "../../context/AuthContext";
+import { UserAuth } from "../../context/UserContext";
 import { auth } from "../../configs/firebaseConfig";
 
 const UserProfile = () => {

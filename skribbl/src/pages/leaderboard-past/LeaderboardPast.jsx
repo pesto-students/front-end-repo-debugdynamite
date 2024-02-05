@@ -1,7 +1,7 @@
 import Hero from "../../composite-components/hero/Hero";
 import PlayersList from "../../composite-components/players-list/PlayersList";
 import PlayerPosition from "./components/player-position/PlayerPosition";
-import { UserAuth } from "../../context/AuthContext";
+import { UserAuth } from "../../context/UserContext";
 import { useParams } from "react-router-dom";
 import { leaderboardReader, playersInfoReader } from "../../readers";
 import { useLeaderBoardData } from "../../api/hooks";

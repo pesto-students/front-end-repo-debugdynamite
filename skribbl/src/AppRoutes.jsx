@@ -12,6 +12,7 @@ import SignIn from "./pages/sign-in";
 import UserProfile from "./pages/user-profile";
 import SocketClient from "./SocketClient";
 import JoinGame from "./pages/join-game";
+import GameDetails from "./pages/game-details/GameDetails";
 
 function AppRoutes() {
   return (
@@ -26,6 +27,7 @@ function AppRoutes() {
           <Route path="user/:userId" element={<Container />}>
             <Route path="profile" element={<UserProfile />} />
           </Route>
+          <Route path="game-details" element={<GameDetails />} />
           <Route path="game/:gameId" element={<Container />}>
             <Route
               path="leaderboard-present"

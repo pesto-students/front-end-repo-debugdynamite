@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { UserAuth } from "../../context/AuthContext";
+import { UserAuth } from "../../context/UserContext";
 import { SIGN_IN_ROUTE } from "../../constants/routes";
 
 const ProtectedRoute = () => {

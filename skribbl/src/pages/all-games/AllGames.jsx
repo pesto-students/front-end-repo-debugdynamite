@@ -2,7 +2,7 @@ import React from "react";
 import RecentGames from "../../composite-components/recent-games/RecentGames";
 import BackButton from "../../components/back-button/BackButton";
 import { DASHBOARD_ROUTE } from "../../constants/routes";
-import { UserAuth } from "../../context/AuthContext";
+import { UserAuth } from "../../context/UserContext";
 import { useQuery } from "@tanstack/react-query";
 import axios from "../../api/axios";
 

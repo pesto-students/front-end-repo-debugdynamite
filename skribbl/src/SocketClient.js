@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
-import { UserAuth } from "./context/AuthContext";
+import { UserAuth } from "./context/UserContext";
 
 const ChatComponent = () => {
   const { user } = UserAuth();

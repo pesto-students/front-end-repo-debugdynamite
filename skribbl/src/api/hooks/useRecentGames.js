@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "../axios";
-import { UserAuth } from "../../context/AuthContext";
+import { UserAuth } from "../../context/UserContext";
 
 const fetchUserGames = async (userId) => {
   const { data } = await axios.get(`/user/${userId}/games`);

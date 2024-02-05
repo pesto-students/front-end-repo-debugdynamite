@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UserAuth } from "../context/AuthContext";
+import { UserAuth } from "../context/UserContext";
 
 const instance = axios.create({
   baseURL: "http://localhost:3001/api/",
