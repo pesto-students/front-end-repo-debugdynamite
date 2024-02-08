@@ -1,19 +1,44 @@
 import Hero from "../../composite-components/hero/Hero";
-import { leaderboardData } from "../leaderboard-present/mockData";
 import PlayersList from "../../composite-components/players-list/PlayersList";
 import PlayerPosition from "./components/player-position/PlayerPosition";
+import { UserAuth } from "../../context/UserContext";
+import { useParams } from "react-router-dom";
+import { leaderboardReader, playersInfoReader } from "../../readers";
+import { useLeaderBoardData } from "../../api/hooks";
 
-function LeaderboardPresent() {
+function getPlayerRank(data, playerId) {
+  const player = leaderboardReader
+    .playersInfo(data)
+    .find((player) => playersInfoReader.playerId(player) === playerId);
+
+  return player ? playersInfoReader.rank(player) : null;
+}
+
+function LeaderboardPast() {
+  const { gameId } = useParams();
+
+  const { user } = UserAuth();
+
+  const { data, error, isLoading } = useLeaderBoardData(gameId);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error fetching data: {error.message}</div>;
+  }
+
   const renderHero = () => {
     return (
-      <Hero entryFees={leaderboardData.entryFees}>
-        <PlayerPosition position="2" />
+      <Hero entryFees={data.entryFees}>
+        <PlayerPosition position={getPlayerRank(data, user.uid)} />
       </Hero>
     );
   };
 
   const renderPlayerList = () => {
-    return <PlayersList playersInfo={leaderboardData.playersInfo} />;
+    return <PlayersList playersInfo={leaderboardReader.playersInfo(data)} />;
   };
 
   return (
@@ -24,4 +49,4 @@ function LeaderboardPresent() {
   );
 }
 
-export default LeaderboardPresent;
+export default LeaderboardPast;

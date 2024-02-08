@@ -10,19 +10,25 @@ import LeaderboardPresent from "./pages/leaderboard-present";
 import ProtectedRoute from "./components/protected-route";
 import SignIn from "./pages/sign-in";
 import UserProfile from "./pages/user-profile";
+import SocketClient from "./SocketClient";
+import JoinGame from "./pages/join-game";
+import GameDetails from "./pages/game-details/GameDetails";
 
 function AppRoutes() {
   return (
     <Router>
       <Routes>
+        <Route path="/socket-client" element={<SocketClient />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/*" element={<ProtectedRoute />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="all-games" element={<AllGames />} />
-          <Route path="user/:user_id" element={<Container />}>
+          <Route path="join-game" element={<JoinGame />} />
+          <Route path="user/:userId" element={<Container />}>
             <Route path="profile" element={<UserProfile />} />
           </Route>
-          <Route path="game/:game_id" element={<Container />}>
+          <Route path="game-details" element={<GameDetails />} />
+          <Route path="game/:gameId" element={<Container />}>
             <Route
               path="leaderboard-present"
               element={<LeaderboardPresent />}

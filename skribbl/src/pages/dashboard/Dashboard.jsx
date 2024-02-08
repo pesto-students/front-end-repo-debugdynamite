@@ -1,14 +1,29 @@
 import React from "react";
 import UserActionButton from "./components/user-action-button/UserActionButton";
-import Button from "../../components/button/Button";
-import { recentGames, actionButtons } from "./mockData";
+import Button from "../../components/button";
+import { actionButtons } from "./consts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import RecentGames from "../../composite-components/recent-games/RecentGames";
+import { useUserGamesData } from "../../api/hooks/";
+import { useNavigate } from "react-router-dom";
+import { JOIN_GAME_ROUTE } from "../../constants/routes";
 
 function Dashboard() {
+  const navigate = useNavigate();
+
+  const { data, error, isLoading } = useUserGamesData();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error fetching data: {error.message}</div>;
+  }
+
   const handlePlay = () => {
-    alert("Not Implemented!");
+    navigate(JOIN_GAME_ROUTE);
   };
 
   const renderLogo = () => {
@@ -32,6 +47,7 @@ function Dashboard() {
       <div className="flex justify-center items-center m-8">
         {actionButtons.map((actionButton) => (
           <UserActionButton
+            key={actionButton.id}
             icon={process.env.PUBLIC_URL + actionButton.icon}
             label={actionButton.label}
             backgroundColor={actionButton.backgroundColor}
@@ -44,7 +60,7 @@ function Dashboard() {
   const renderRecentGames = () => {
     return (
       <RecentGames
-        recentGames={recentGames}
+        recentGames={data}
         header="Recent games"
         numberOfGamesToRender={4}
       />
@@ -54,7 +70,15 @@ function Dashboard() {
   const renderPlayButton = () => {
     return (
       <div className="flex justify-center items-center my-8">
-        <Button onClick={handlePlay}>PLAY</Button>
+        <Button
+          isRounded
+          textSize="2xl"
+          paddingX="8"
+          paddingY="2"
+          onClick={handlePlay}
+        >
+          PLAY
+        </Button>
       </div>
     );
   };

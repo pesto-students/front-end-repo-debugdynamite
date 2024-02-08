@@ -4,7 +4,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import List from "../../components/list/List";
 import GamesListContainer from "../games-list-container/GamesListContainer";
-import { ALL_GAMES_URI } from "../../constants/routeContants";
+import {
+  ALL_GAMES_ROUTE,
+  getPastLeaderBoardRoute,
+} from "../../constants/routes";
+
+import { userGamesReader } from "../../readers";
 
 function RecentGames({
   header,
@@ -21,7 +26,7 @@ function RecentGames({
 
   const renderSeeAll = () => {
     return (
-      <Link className="font-semibold text-pink-600" to={ALL_GAMES_URI}>
+      <Link className="font-semibold text-pink-600" to={ALL_GAMES_ROUTE}>
         See all
         <span className="ml-1">
           <FontAwesomeIcon icon={faAngleRight} />
@@ -44,15 +49,17 @@ function RecentGames({
       <div className="flex-1 min-h-0">
         <List
           dataSource={gamesToRender}
-          renderItem={(item) => (
-            <div key={item.id} className="m-3">
-              <GamesListContainer
-                images={item.images}
-                date={item.date}
-                time={item.time}
-                money={item.money}
-                isMoneyGained={item.isMoneyGained}
-              />
+          renderItem={(game) => (
+            <div key={userGamesReader.gameId(game)} className="m-3">
+              <Link to={getPastLeaderBoardRoute(userGamesReader.gameId(game))}>
+                <GamesListContainer
+                  images={userGamesReader.images(game)}
+                  date={userGamesReader.date(game)}
+                  time={userGamesReader.time(game)}
+                  money={userGamesReader.money(game)}
+                  isMoneyGained={userGamesReader.isMoneyGained(game)}
+                />
+              </Link>
             </div>
           )}
         />
@@ -60,10 +67,10 @@ function RecentGames({
     );
   };
   return (
-    <div>
+    <>
       {renderHeader()}
       {recentGamesList()}
-    </div>
+    </>
   );
 }
 

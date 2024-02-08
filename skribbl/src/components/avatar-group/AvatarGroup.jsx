@@ -11,8 +11,8 @@ function AvatarGroup({ images, displayImagesMaxLength = 3, styles = {} }) {
   return (
     <div style={styles}>
       <Avatar.Group>
-        {displayImages.map((image) => (
-          <Avatar img={image} alt="" rounded stacked />
+        {displayImages.map((image, index) => (
+          <Avatar key={index} img={image} alt="" rounded stacked />
         ))}
         {extraImages > 0 ? <Avatar.Counter total={extraImages} /> : null}
       </Avatar.Group>

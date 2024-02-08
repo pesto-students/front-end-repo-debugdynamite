@@ -1,12 +1,18 @@
 import React from "react";
-import { UserAuth } from "../../context/AuthContext";
+import { signOut } from "firebase/auth";
+import { UserAuth } from "../../context/UserContext";
+import { auth } from "../../configs/firebaseConfig";
 
 const UserProfile = () => {
-  const { logOut, user } = UserAuth();
+  const { user } = UserAuth();
+
+  const logOut = () => {
+    signOut(auth);
+  };
 
   const handleSignOut = async () => {
     try {
-      await logOut();
+      logOut();
     } catch (error) {
       console.log(error);
     }

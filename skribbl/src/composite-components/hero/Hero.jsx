@@ -1,6 +1,6 @@
 import BackButton from "../../components/back-button/BackButton";
 
-import { DASHBOARD_URI } from "../../constants/routeContants";
+import { DASHBOARD_ROUTE } from "../../constants/routes";
 
 const heroClassName = "bg-black text-white p-2";
 const entryFeesClassName = "text-right m-4";
@@ -10,7 +10,7 @@ function Hero({ children, entryFees }) {
   const renderBackButton = () => {
     return (
       <div className={backButtonClassName}>
-        <BackButton target={DASHBOARD_URI} />
+        <BackButton target={DASHBOARD_ROUTE} />
       </div>
     );
   };
