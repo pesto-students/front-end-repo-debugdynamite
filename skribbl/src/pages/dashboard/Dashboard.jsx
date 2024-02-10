@@ -84,13 +84,15 @@ function Dashboard() {
   };
 
   return (
-    <div>
-      {renderLogo()}
-      {renderWalletBalance()}
-      {renderUserActionButtons()}
-      {renderRecentGames()}
+    <>
+      <div className="h-[80vh]">
+        {renderLogo()}
+        {renderWalletBalance()}
+        {renderUserActionButtons()}
+        {renderRecentGames()}
+      </div>
       {renderPlayButton()}
-    </div>
+    </>
   );
 }
 

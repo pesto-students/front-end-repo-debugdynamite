@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Label, TextInput } from "flowbite-react";
 import BackButton from "../../components/back-button/BackButton";
-import { JOIN_GAME_ROUTE } from "../../constants/routes";
+import { GAME_AREA_ROUTE, JOIN_GAME_ROUTE } from "../../constants/routes";
 import Button from "../../components/button";
+import { useNavigate } from "react-router-dom";
 
 const headingClassName = "font-bold text-xl mb-8";
 const backButtonClassName = "m-4";
 
 function GameDetails() {
+  const navigate = useNavigate();
+
   const [entryFees, setEntryFees] = useState("");
   const [numberOfRounds, setNumberOfRounds] = useState("");
   const [roundDuration, setRoundDuration] = useState("");
@@ -25,11 +28,11 @@ function GameDetails() {
   };
 
   const handleProceedClick = () => {
-    // Add logic to proceed with the entered details
     console.log("Entry Fees:", entryFees);
     console.log("Number of Rounds:", numberOfRounds);
     console.log("Round Duration:", roundDuration);
-    // You can perform further actions or navigate to the next step here
+
+    navigate(GAME_AREA_ROUTE);
   };
 
   const renderBackButton = () => {
