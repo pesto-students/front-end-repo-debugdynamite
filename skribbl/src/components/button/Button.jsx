@@ -10,7 +10,7 @@ function Button({
   paddingY,
 }) {
   // Define dynamic classes based on the props
-  const buttonClasses = `
+  const buttonType = `
     ${isRounded ? "rounded-full" : "rounded-md"}
     ${
       isOutlined
@@ -19,11 +19,10 @@ function Button({
     }
   `;
 
+  const buttonClass = `font-bold text-${textSize} ${buttonType} py-${paddingY} px-${paddingX}`;
+
   return (
-    <button
-      className={`font-bold text-${textSize} ${buttonClasses} py-${paddingY} px-${paddingX}`}
-      onClick={onClick}
-    >
+    <button className={buttonClass} onClick={onClick}>
       {children}
     </button>
   );

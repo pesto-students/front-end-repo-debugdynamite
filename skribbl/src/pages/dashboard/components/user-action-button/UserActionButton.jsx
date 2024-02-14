@@ -12,13 +12,13 @@ function UserActionButton({
   };
 
   let imgClassName =
-    "w-16 h-16 rounded-full overflow-hidden flex justify-center items-center " +
+    "w-14 h-14 rounded-full overflow-hidden flex justify-center items-center " +
     backgroundColor;
 
   const renderIcon = () => {
     return (
       <div className={imgClassName}>
-        <img src={icon} alt="icon" className="h-10 w-10" />
+        <img src={icon} alt="icon" className="h-8 w-8" />
       </div>
     );
   };
