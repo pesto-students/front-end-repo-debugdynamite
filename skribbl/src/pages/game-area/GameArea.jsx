@@ -1,38 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { UserAuth } from "../../context/UserContext";
-import { io } from "socket.io-client";
+import React, { useEffect, useRef, useState } from "react";
+import { SocketConnection } from "../../context/SocketContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import Board from "./components/board";
 import Header from "./components/header/Header";
-import InGameLeaderboardCard from "./components/in-game-leaderboard-card";
+import InGameLeaderboard from "./components/in-game-leaderboard";
+import WordModal from "./components/words-modal";
+import ScoreModal from "./components/scores-modal";
+import { UserAuth } from "../../context/UserContext";
 
 function GameArea() {
-  const { user } = UserAuth();
-
-  const [socket, setSocket] = useState(null);
+  const { socket } = SocketConnection();
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
-  const [users, setUsers] = useState([]);
-  const [joined, setJoined] = useState(false);
+  const [roomCode, setRoomCode] = useState();
+  const [wordOptions, setWordOptions] = useState([]);
+  const { user, connectedUsers, setSelectedUser } = UserAuth();
 
-  const handleJoin = async () => {
-    if (user && !socket) {
-      const token = await user.getIdToken();
+  const [isWordsModalOpen, setIsWordsModalOpen] = useState(false);
+  const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
 
-      // Connect to the server with the token as part of the authentication
-      const newSocket = io("http://localhost:3001/", {
-        transports: ["websocket", "polling"],
-        auth: {
-          token,
-        },
-      });
+  const [selectedWord, setSelectedWord] = useState(null);
 
-      newSocket.connect();
+  const [userScores, setUserScores] = useState([]);
 
-      setSocket(newSocket);
-      setJoined(true);
-    }
+  const selectedUserRef = useRef();
+
+  const handleCloseWordModal = () => {
+    setIsWordsModalOpen(false);
+  };
+
+  const handleCloseScoreModal = () => {
+    setIsScoreModalOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    setMessageInput(e.target.value);
   };
 
   useEffect(() => {
@@ -42,18 +45,42 @@ function GameArea() {
         setMessages((prevMessages) => [...prevMessages, message]);
       });
 
-      // Listen for user join messages
-      socket.on("userJoined", (username) => {
-        console.log("user joined: ", username);
-        setUsers((prevUsers) => [...prevUsers, username]);
+      socket.on("roomCreated", (roomCode) => {
+        setRoomCode(roomCode);
       });
 
-      // Listen for user leave messages
-      socket.on("userLeft", (username) => {
-        setUsers((prevUsers) => prevUsers.filter((user) => user !== username));
+      socket.on("wordOptions", (wordOptions) => {
+        if (selectedUserRef.current && user.uid !== selectedUserRef.current.uid)
+          return;
+        setWordOptions(wordOptions);
+        setIsWordsModalOpen(true);
+      });
+
+      socket.on("endGame", () => {
+        console.log("end game");
+      });
+
+      socket.on("userSelected", (user) => {
+        setSelectedUser(user);
+        selectedUserRef.current = user;
+      });
+
+      socket.on("scores", (scores) => {
+        const userScores = [];
+        Object.keys(scores).forEach((userId) => {
+          userScores.push({ userId, score: scores[userId] });
+        });
+        setUserScores(userScores);
+        setIsScoreModalOpen(true);
+        setTimeout(() => {
+          setIsScoreModalOpen(false);
+          if (selectedUserRef.current.uid === user.uid) {
+            socket.emit("startRound");
+          }
+        }, 2000);
       });
     }
-  }, [socket]);
+  }, []);
 
   const sendMessage = () => {
     if (socket && messageInput.trim() !== "") {
@@ -69,7 +96,10 @@ function GameArea() {
   };
 
   const renderInGameLeaderBoard = () => {
-    return <InGameLeaderboardCard />;
+    const playersPositionData = connectedUsers.map((user, index) => {
+      return { position: index, name: user?.name, points: 0 };
+    });
+    return <InGameLeaderboard playersPositionData={playersPositionData} />;
   };
 
   const renderMessages = () => {
@@ -93,13 +123,14 @@ function GameArea() {
           placeholder="Start guessing..."
           onKeyPress={handleKeyPress}
           value={messageInput}
-          onChange={(e) => setMessageInput(e.target.value)}
+          onChange={(e) => handleInputChange(e)}
+          disabled={
+            selectedUserRef.current && selectedUserRef.current.uid === user.uid
+          }
         />
         <button
           className="flex-shrink-0 px-4 py-2 text-white bg-gray-900 rounded-md hover:bg-blue-600 focus:outline-none"
           type="button"
-          value={messageInput}
-          onChange={(e) => setMessageInput(e.target.value)}
           onClick={sendMessage}
         >
           <FontAwesomeIcon icon={faPaperPlane} />
@@ -108,19 +139,46 @@ function GameArea() {
     );
   };
 
-  if (!joined) {
-    return <button onClick={handleJoin}>Join</button>;
-  }
-
-  return (
-    <>
-      <Header />
-      <Board socket={socket} />
+  const renderLeaderBoardAndMessages = () => {
+    return (
       <div className="flex w-full">
         <div className="flex-1">{renderInGameLeaderBoard()}</div>
         <div className="flex-1">{renderMessages()}</div>
       </div>
+    );
+  };
+
+  const renderWordModal = () => {
+    return (
+      <WordModal
+        words={wordOptions}
+        isOpen={isWordsModalOpen}
+        onClose={handleCloseWordModal}
+        selectedOption={selectedWord}
+        setSelectedOption={setSelectedWord}
+      />
+    );
+  };
+
+  const renderScoresModal = () => {
+    return (
+      <ScoreModal
+        isOpen={isScoreModalOpen}
+        onClose={handleCloseScoreModal}
+        userScores={userScores}
+        timeoutDuration={5000} // 5000 milliseconds (5 seconds)
+      />
+    );
+  };
+
+  return (
+    <>
+      <Header roomCode={roomCode} selectedWord={selectedWord} />
+      <Board />
+      {renderLeaderBoardAndMessages()}
       {renderSendMessage()}
+      {renderWordModal()}
+      {renderScoresModal()}
     </>
   );
 }

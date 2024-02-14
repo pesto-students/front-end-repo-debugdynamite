@@ -1,12 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
 
-const OTPInput = ({ length, onComplete }) => {
+const OTPInput = ({ length, setOtpValue }) => {
   const [otp, setOtp] = useState(Array(length).fill(""));
   const inputRefs = useRef([]);
 
   useEffect(() => {
     inputRefs.current[0].focus();
   }, []);
+
+  useEffect(() => {
+    setOtpValue(otp.join(""));
+  }, [otp, setOtpValue]);
 
   const handleInputChange = (index, value) => {
     if (!/^[0-9a-zA-Z]*$/.test(value)) return;
@@ -22,11 +26,6 @@ const OTPInput = ({ length, onComplete }) => {
 
       return newOtp;
     });
-
-    const fullOtp = otp.join("");
-    if (fullOtp.length === length) {
-      onComplete(fullOtp);
-    }
   };
 
   const handleKeyDown = (index, e) => {

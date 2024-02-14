@@ -1,5 +1,6 @@
 import AppRoutes from "./AppRoutes";
 import { UserContextProvider } from "./context/UserContext";
+import { SocketContextProvider } from "./context/SocketContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AxiosInterceptor } from "./api/axios";
 
@@ -9,9 +10,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <UserContextProvider>
-        <AxiosInterceptor>
-          <AppRoutes />
-        </AxiosInterceptor>
+        <SocketContextProvider>
+          <AxiosInterceptor>
+            <AppRoutes />
+          </AxiosInterceptor>
+        </SocketContextProvider>
       </UserContextProvider>
     </QueryClientProvider>
   );
