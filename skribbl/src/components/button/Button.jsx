@@ -8,6 +8,7 @@ function Button({
   textSize,
   paddingX,
   paddingY,
+  isDisabled = false,
 }) {
   // Define dynamic classes based on the props
   const buttonType = `
@@ -19,10 +20,12 @@ function Button({
     }
   `;
 
-  const buttonClass = `font-bold text-${textSize} ${buttonType} py-${paddingY} px-${paddingX}`;
+  const buttonClass = `py-${paddingY} px-8 font-bold text-${textSize} ${buttonType} `;
+
+  console.log(buttonClass);
 
   return (
-    <button className={buttonClass} onClick={onClick}>
+    <button className={buttonClass} onClick={onClick} disabled={isDisabled}>
       {children}
     </button>
   );

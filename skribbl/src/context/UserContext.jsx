@@ -6,6 +6,8 @@ export const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState();
+  const [connectedUsers, setConnectedUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -17,7 +19,17 @@ export const UserContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
+    <UserContext.Provider
+      value={{
+        user,
+        connectedUsers,
+        setConnectedUsers,
+        selectedUser,
+        setSelectedUser,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
   );
 };
 

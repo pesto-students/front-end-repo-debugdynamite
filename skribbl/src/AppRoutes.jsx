@@ -26,6 +26,7 @@ function AppRoutes() {
           <Route path="user/:userId" element={<Container />}>
             <Route path="profile" element={<UserProfile />} />
           </Route>
+          <Route path="lobby" element={<GameLobby />} />
           <Route path="game-details" element={<GameDetails />} />
           <Route path="game-area" element={<GameArea />} />
           <Route path="game/:gameId" element={<Container />}>
@@ -34,7 +35,6 @@ function AppRoutes() {
               element={<LeaderboardPresent />}
             />
             <Route path="leaderboard-past" element={<LeaderboardPast />} />
-            <Route path="lobby" element={<GameLobby />} />
           </Route>
         </Route>
       </Routes>

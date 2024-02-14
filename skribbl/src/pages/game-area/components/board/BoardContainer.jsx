@@ -1,25 +1,30 @@
 import React, { useEffect, useRef, useState } from "react";
+import { SocketConnection } from "../../../../context/SocketContext";
 import DrawingBoard from "./DrawingBoard";
 import "./style.css";
+import { UserAuth } from "../../../../context/UserContext";
+import { GameState } from "../../../../context/GameContext";
 
-const BoardContainer = ({ socket }) => {
+const BoardContainer = () => {
+  const { socket } = SocketConnection();
+
   const [color, setColor] = useState("#000000");
   const [size, setSize] = useState("5");
 
-  const [connectedUsers, setConnectedUsers] = useState({});
-  const [selectedUser, setSelectedUser] = useState(null);
+  const { user } = UserAuth();
+  const { setConnectedUsers, selectedUser, setSelectedUser } = GameState();
 
   const canvasRef = useRef(null);
 
   useEffect(() => {
     if (socket) {
-      socket.on("connectedUsers", (users) => {
-        setConnectedUsers(users);
-        socket.emit("canvas-data", canvasRef.current.toDataURL("image/png"));
+      socket.on("connectedUsers", (userSockets) => {
+        setConnectedUsers(userSockets);
+        socket.emit("canvas-data", canvasRef.current?.toDataURL("image/png"));
       });
 
-      socket.on("userSelected", (user) => {
-        setSelectedUser(user);
+      socket.on("userSelected", (userSocket) => {
+        setSelectedUser(userSocket);
       });
     }
   }, [setConnectedUsers, socket]);
@@ -32,30 +37,13 @@ const BoardContainer = ({ socket }) => {
     setSize(event.target.value);
   };
 
-  const handleUserSelection = (user) => {
-    socket.emit("selectUser", user);
-  };
-
-  let connectedUsersList = [];
-  Object.keys(connectedUsers).forEach((user) =>
-    connectedUsersList.push(
-      <div key={connectedUsers[user].userName}>
-        <button onClick={() => handleUserSelection(connectedUsers[user])}>
-          {connectedUsers[user].userName}
-        </button>
-      </div>
-    )
-  );
-
   const renderBoard = () => {
     return (
       <div className="board-container">
         <DrawingBoard
           color={color}
           size={size}
-          setConnectedUsers={setConnectedUsers}
           selectedUser={selectedUser}
-          setSelectedUser={setSelectedUser}
           socket={socket}
           ref={canvasRef}
         ></DrawingBoard>
@@ -63,31 +51,19 @@ const BoardContainer = ({ socket }) => {
     );
   };
 
-  const renderConnectedUsers = () => {
-    return (
-      <div>
-        <div>Connected Users</div>
-        <div>{connectedUsersList}</div>
-      </div>
-    );
-  };
-
   const renderBrush = () => {
-    if (
-      !selectedUser ||
-      (selectedUser && selectedUser.socketId !== socket.id)
-    ) {
+    if (!selectedUser || (selectedUser && selectedUser.uid !== user.uid)) {
       return null;
     }
     return (
-      <div className="tools-section">
+      <div className="tools-section mb-4">
         <div className="color-picker-container">
-          Select Brush Color : &nbsp;
+          Color : &nbsp;
           <input type="color" value={color} onChange={changeColor} />
         </div>
 
         <div className="brushsize-container">
-          Select Brush Size : &nbsp;
+          Size : &nbsp;
           <select value={size} onChange={changeSize}>
             <option> 5 </option>
             <option> 10 </option>
@@ -97,6 +73,7 @@ const BoardContainer = ({ socket }) => {
             <option> 30 </option>
           </select>
         </div>
+        <hr />
       </div>
     );
   };
@@ -104,7 +81,6 @@ const BoardContainer = ({ socket }) => {
   return (
     <>
       {renderBoard()}
-      {renderConnectedUsers()}
       {renderBrush()}
     </>
   );

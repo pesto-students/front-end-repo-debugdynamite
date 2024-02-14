@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import { Label, TextInput } from "flowbite-react";
 import BackButton from "../../components/back-button/BackButton";
-import { GAME_AREA_ROUTE, JOIN_GAME_ROUTE } from "../../constants/routes";
+import { GAME_LOBBY_ROUTE, JOIN_GAME_ROUTE } from "../../constants/routes";
 import Button from "../../components/button";
 import { useNavigate } from "react-router-dom";
+import { SocketConnection } from "../../context/SocketContext";
+import { UserAuth } from "../../context/UserContext";
 
 const headingClassName = "font-bold text-xl mb-8";
 const backButtonClassName = "m-4";
 
 function GameDetails() {
   const navigate = useNavigate();
+  const { socket } = SocketConnection();
+  const { user } = UserAuth();
 
   const [entryFees, setEntryFees] = useState("");
   const [numberOfRounds, setNumberOfRounds] = useState("");
@@ -28,11 +32,8 @@ function GameDetails() {
   };
 
   const handleProceedClick = () => {
-    console.log("Entry Fees:", entryFees);
-    console.log("Number of Rounds:", numberOfRounds);
-    console.log("Round Duration:", roundDuration);
-
-    navigate(GAME_AREA_ROUTE);
+    socket.emit("createRoom", { entryFees, roundDuration, user });
+    navigate(GAME_LOBBY_ROUTE);
   };
 
   const renderBackButton = () => {

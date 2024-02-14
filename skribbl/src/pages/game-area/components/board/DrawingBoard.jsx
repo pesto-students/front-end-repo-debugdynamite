@@ -1,12 +1,13 @@
 import React, { forwardRef, useEffect, useRef } from "react";
 import "./style.css";
+import { UserAuth } from "../../../../context/UserContext";
 
 const DrawingBoard = forwardRef(
   ({ color, size, selectedUser, socket }, ref) => {
+    const { user } = UserAuth();
     const timeoutRef = useRef();
 
     const ctxRef = useRef(null);
-
     const selectedUserRef = useRef(null);
 
     useEffect(() => {
@@ -76,11 +77,6 @@ const DrawingBoard = forwardRef(
       canvas.addEventListener(
         "mousedown",
         function (e) {
-          console.log(
-            "[MouseDown] selectedUser:",
-            selectedUser,
-            selectedUserRef.current
-          );
           canvas.addEventListener("mousemove", onPaint, false);
         },
         false
@@ -97,10 +93,7 @@ const DrawingBoard = forwardRef(
       const onPaint = () => {
         // Check if the current user is the selected user
         const userSelected = selectedUserRef.current;
-        console.log("[onPaint]selected user: ", userSelected);
-        console.log("[onPaint]simple selected user: ", selectedUser);
-        console.log("[onPaint]simple socket:  ", socket);
-        if (userSelected && userSelected.socketId === socket.id) {
+        if (userSelected && userSelected.uid === user.uid) {
           ctx.beginPath();
           ctx.moveTo(last_mouse.x, last_mouse.y);
           ctx.lineTo(mouse.x, mouse.y);
@@ -110,7 +103,7 @@ const DrawingBoard = forwardRef(
           if (timeoutRef.current !== undefined)
             clearTimeout(timeoutRef.current);
           timeoutRef.current = setTimeout(function () {
-            socket.emit("canvas-data", canvas.toDataURL("image/png"));
+            socket.emit("canvas-data", canvas?.toDataURL("image/png"));
           }, 100);
         }
       };

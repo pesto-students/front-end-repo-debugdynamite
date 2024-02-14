@@ -3,7 +3,7 @@ import PlayersListContainer from "../players-list-container/PlayersListContainer
 import List from "../../components/list/List";
 import { playersInfoReader } from "../../readers";
 
-function PlayersList({ playersInfo }) {
+function PlayersList({ playersInfo, shouldRenderHeader = true }) {
   const renderRankHeader = () => {
     return (
       <div className="flex flex-row-reverse mx-4 my-2">
@@ -16,6 +16,8 @@ function PlayersList({ playersInfo }) {
       </div>
     );
   };
+
+  console.log({ pp: playersInfoReader.points(playersInfo[0]) });
 
   const renderRankList = () => {
     return (
@@ -39,7 +41,7 @@ function PlayersList({ playersInfo }) {
   const renderRankings = () => {
     return (
       <div>
-        {renderRankHeader()}
+        {shouldRenderHeader && renderRankHeader()}
         {renderRankList()}
       </div>
     );
