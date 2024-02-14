@@ -8,14 +8,19 @@ import InGameLeaderboard from "./components/in-game-leaderboard";
 import WordModal from "./components/words-modal";
 import ScoreModal from "./components/scores-modal";
 import { UserAuth } from "../../context/UserContext";
+import { GameState } from "../../context/GameContext";
+import { useNavigate } from "react-router-dom";
+import { getPresentLeaderBoardRoute } from "../../constants/routes";
 
 function GameArea() {
+  const navigate = useNavigate();
   const { socket } = SocketConnection();
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
   const [roomCode, setRoomCode] = useState();
   const [wordOptions, setWordOptions] = useState([]);
-  const { user, connectedUsers, setSelectedUser } = UserAuth();
+  const { user } = UserAuth();
+  const { connectedUsers, setSelectedUser, hostUser } = GameState();
 
   const [isWordsModalOpen, setIsWordsModalOpen] = useState(false);
   const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
@@ -41,6 +46,11 @@ function GameArea() {
   useEffect(() => {
     if (socket) {
       // Listen for incoming messages from the server
+      console.log("host user: ", hostUser, "user: ", user);
+      if (hostUser.uid === user.uid) {
+        socket.emit("startRound");
+      }
+
       socket.on("message", (message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
       });
@@ -56,8 +66,8 @@ function GameArea() {
         setIsWordsModalOpen(true);
       });
 
-      socket.on("endGame", () => {
-        console.log("end game");
+      socket.on("endGame", (gameId) => {
+        navigate(getPresentLeaderBoardRoute(gameId));
       });
 
       socket.on("userSelected", (user) => {
@@ -74,7 +84,7 @@ function GameArea() {
         setIsScoreModalOpen(true);
         setTimeout(() => {
           setIsScoreModalOpen(false);
-          if (selectedUserRef.current.uid === user.uid) {
+          if (selectedUserRef.current?.uid === user?.uid) {
             socket.emit("startRound");
           }
         }, 2000);

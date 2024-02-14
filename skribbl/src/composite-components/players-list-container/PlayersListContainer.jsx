@@ -11,9 +11,9 @@ const containerStyles = {
 function PlayersListContainer({
   image,
   name,
-  gamesPlayed,
-  points = 0,
-  coins = 0,
+  gamesPlayed = 0,
+  points = null,
+  coins = null,
 }) {
   const renderPlayerInfo = () => {
     return (
@@ -21,7 +21,9 @@ function PlayersListContainer({
         <AvatarLabel
           image={image}
           primaryLabel={name}
-          secondaryLabel={`Games Played: ${gamesPlayed}`}
+          secondaryLabel={
+            gamesPlayed !== 0 ? `Games Played: ${gamesPlayed}` : null
+          }
           isImgRounded={true}
         />
       </div>
@@ -42,7 +44,7 @@ function PlayersListContainer({
   return (
     <div style={containerStyles}>
       {renderPlayerInfo()}
-      {renderScore()}
+      {points != null && renderScore()}
     </div>
   );
 }

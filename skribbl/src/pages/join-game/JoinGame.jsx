@@ -4,12 +4,12 @@ import BackButton from "../../components/back-button/BackButton";
 import Button from "../../components/button";
 import {
   DASHBOARD_ROUTE,
-  GAME_AREA_ROUTE,
   GAME_DETAILS_ROUTE,
+  GAME_LOBBY_ROUTE,
 } from "../../constants/routes";
 import { useNavigate } from "react-router-dom";
 import { SocketConnection } from "../../context/SocketContext";
-import { UserAuth } from "../../context/UserContext";
+import { GameState } from "../../context/GameContext";
 
 const backButtonClassName = "m-4";
 const headingClassName = "font-bold text-xl";
@@ -19,7 +19,7 @@ function JoinGame() {
   const navigate = useNavigate();
   const { socket } = SocketConnection();
 
-  const { setConnectedUsers } = UserAuth();
+  const { setConnectedUsers } = GameState();
 
   const [roomCodeValue, setRoomCodeValue] = useState();
   const [entryFees, setEntryFees] = useState();
@@ -47,7 +47,7 @@ function JoinGame() {
 
   const handleProceed = () => {
     socket.emit("joinRoom", roomCodeValue);
-    navigate(GAME_AREA_ROUTE);
+    navigate(GAME_LOBBY_ROUTE);
   };
 
   const renderBackButton = () => {

@@ -16,8 +16,6 @@ const WordModal = ({
     onClose();
   };
 
-  console.log("selected option: ", selectedOption);
-
   const handleOptionSelect = (option) => {
     console.log("word selected: ", option);
     setSelectedOption(option);

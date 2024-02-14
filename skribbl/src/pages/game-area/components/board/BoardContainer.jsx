@@ -3,6 +3,7 @@ import { SocketConnection } from "../../../../context/SocketContext";
 import DrawingBoard from "./DrawingBoard";
 import "./style.css";
 import { UserAuth } from "../../../../context/UserContext";
+import { GameState } from "../../../../context/GameContext";
 
 const BoardContainer = () => {
   const { socket } = SocketConnection();
@@ -10,8 +11,8 @@ const BoardContainer = () => {
   const [color, setColor] = useState("#000000");
   const [size, setSize] = useState("5");
 
-  const { user, setConnectedUsers } = UserAuth();
-  const { selectedUser, setSelectedUser } = UserAuth();
+  const { user } = UserAuth();
+  const { setConnectedUsers, selectedUser, setSelectedUser } = GameState();
 
   const canvasRef = useRef(null);
 

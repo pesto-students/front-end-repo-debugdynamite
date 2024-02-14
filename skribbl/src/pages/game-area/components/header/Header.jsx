@@ -58,7 +58,6 @@ function Header({ roomCode, selectedWord }) {
         {renderTime()}
         {renderWordPlaceholder()}
         {renderRoundNumber()}
-        <button onClick={() => socket.emit("startRound")}>Start Game</button>
       </div>
     </header>
   );
