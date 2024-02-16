@@ -14,7 +14,7 @@ export const SocketContextProvider = ({ children }) => {
       const token = user.accessToken;
 
       // Connect to the server with the token as part of the authentication
-      const newSocket = io("http://localhost:3001/", {
+      const newSocket = io(process.env.REACT_APP_BASE_URL, {
         transports: ["websocket", "polling"],
         auth: {
           token,
