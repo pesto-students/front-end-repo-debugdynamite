@@ -1,8 +1,10 @@
 import axios from "axios";
 import { UserAuth } from "../context/UserContext";
 
+console.log("base url: ", process.env.REACT_APP_BASE_URL);
+
 const instance = axios.create({
-  baseURL: "http://localhost:3001/api/",
+  baseURL: `${process.env.REACT_APP_BASE_URL}/api/`,
 });
 
 const AxiosInterceptor = ({ children }) => {
