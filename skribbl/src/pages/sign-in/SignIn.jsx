@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { GoogleButton } from "react-google-button";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  // signInWithPopup,
+  signInWithRedirect,
+} from "firebase/auth";
 import { UserAuth } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../configs/firebaseConfig";
@@ -13,7 +17,8 @@ const Signin = () => {
 
   const googleSignIn = async () => {
     const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(auth, provider);
+    // const result = await signInWithPopup(auth, provider);
+    const result = await signInWithRedirect(auth, provider);
 
     try {
       const { uid, email, displayName, photoURL } = result.user;
