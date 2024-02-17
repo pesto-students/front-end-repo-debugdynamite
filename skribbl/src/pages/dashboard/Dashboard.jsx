@@ -1,26 +1,66 @@
 import React from "react";
 import UserActionButton from "./components/user-action-button/UserActionButton";
 import Button from "../../components/button";
-import { actionButtons } from "./consts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import RecentGames from "../../composite-components/recent-games/RecentGames";
 import { useUserGamesData } from "../../api/hooks/";
 import { useNavigate } from "react-router-dom";
-import { JOIN_GAME_ROUTE } from "../../constants/routes";
+import { JOIN_GAME_ROUTE, getUserProfileRoute } from "../../constants/routes";
+import { useUserData } from "../../api/hooks/useUserData";
+import { UserAuth } from "../../context/UserContext";
 
 function Dashboard() {
   const navigate = useNavigate();
 
-  const { data, error, isLoading } = useUserGamesData();
+  const { user } = UserAuth();
 
-  if (isLoading) {
+  const { data, error, isLoading } = useUserGamesData();
+  const {
+    data: userData,
+    error: userError,
+    isLoading: userIsLoading,
+  } = useUserData(user.uid);
+
+  if (isLoading || userIsLoading) {
     return <div>Loading...</div>;
   }
 
   if (error) {
     return <div>Error fetching data: {error.message}</div>;
   }
+
+  console.log({ userData });
+
+  const actionButtons = [
+    {
+      id: 1,
+      icon: "/cashout.png",
+      label: "Cash Out",
+      backgroundColor: "bg-purple-100",
+      onClick: () => {
+        alert("Not Implemented!");
+      },
+    },
+    {
+      id: 2,
+      icon: "/addmoney.png",
+      label: "Add Money",
+      backgroundColor: "bg-blue-100",
+      onClick: () => {
+        alert("Not Implemented!");
+      },
+    },
+    {
+      id: 3,
+      icon: "/profile.png",
+      label: "Account",
+      backgroundColor: "bg-green-100",
+      onClick: () => {
+        navigate(getUserProfileRoute(user.uid));
+      },
+    },
+  ];
 
   const handlePlay = () => {
     navigate(JOIN_GAME_ROUTE);
@@ -36,7 +76,9 @@ function Dashboard() {
         <div className="text-gray-400">WALLET BALANCE</div>
         <div className="flex items-top">
           <FontAwesomeIcon icon={faIndianRupeeSign} className="mt-2 ml-0.5" />
-          <span className="text-4xl font-bold ml-1">265</span>
+          <span className="text-4xl font-bold ml-1">
+            {userData?.wallet_balance}
+          </span>
         </div>
       </div>
     );
@@ -51,6 +93,7 @@ function Dashboard() {
             icon={process.env.PUBLIC_URL + actionButton.icon}
             label={actionButton.label}
             backgroundColor={actionButton.backgroundColor}
+            onClick={actionButton.onClick}
           />
         ))}
       </div>

@@ -5,6 +5,7 @@ export const getPastLeaderBoardRoute = (gameId) =>
   `/game/${gameId}/leaderboard-past`;
 export const getPresentLeaderBoardRoute = (gameId) =>
   `/game/${gameId}/leaderboard-present`;
+export const getUserProfileRoute = (userId) => `/user/${userId}/profile`;
 export const JOIN_GAME_ROUTE = "/join-game";
 export const GAME_DETAILS_ROUTE = "/game-details";
 export const GAME_AREA_ROUTE = "/game-area";
