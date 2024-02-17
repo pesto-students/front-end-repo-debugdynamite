@@ -50,8 +50,6 @@ function GameLobby() {
     );
   };
 
-  console.log("host user: ", hostUser, "user: ", user);
-
   return (
     <>
       <div className="flex flex-col justify-between h-[100vh]">

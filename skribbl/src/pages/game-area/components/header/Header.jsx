@@ -2,14 +2,19 @@ import React, { useEffect, useState } from "react";
 import { getPositionSuffix } from "../../../../utils";
 import { SocketConnection } from "../../../../context/SocketContext";
 
-function Header({ roomCode, selectedWord }) {
+function Header() {
   const { socket } = SocketConnection();
-  const [time, setTime] = useState();
+  const [time, setTime] = useState(0);
+  const [selectedWordLength, setSelectedWordLength] = useState(0);
 
   useEffect(() => {
     if (socket) {
       socket.on("timerUpdate", (timerValue) => {
         setTime(timerValue);
+      });
+
+      socket.on("selectedWordLength", (selectedWordLength) => {
+        setSelectedWordLength(selectedWordLength);
       });
     }
   }, [socket]);
@@ -17,21 +22,17 @@ function Header({ roomCode, selectedWord }) {
   const renderTime = () => {
     return (
       <div className="flex-shrink-0">
-        <span className="font-bold text-lg">
-          {time}s - {roomCode}
-        </span>
+        <span className="font-bold text-lg">{time}s</span>
       </div>
     );
   };
 
   const renderWordPlaceholder = () => {
-    let selectedWordLength = 0;
-    console.log({ selectedWord });
-    if (selectedWord && selectedWord.length > 0) {
+    if (selectedWordLength > 0) {
       return (
         <div className="flex-grow text-center">
           <span className="font-bold text-xl">
-            {"_ " * selectedWordLength} {selectedWordLength}
+            {"_ ".repeat(Number(selectedWordLength))} {selectedWordLength}
           </span>
         </div>
       );

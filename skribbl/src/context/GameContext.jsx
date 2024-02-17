@@ -22,7 +22,6 @@ export const GameContextProvider = ({ children }) => {
       });
 
       socket.on("hostUser", (user) => {
-        console.log("host user inside user context: ", user);
         setHostUser(user);
       });
     }
