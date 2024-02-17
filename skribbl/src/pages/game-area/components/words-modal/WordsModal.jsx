@@ -12,14 +12,13 @@ const WordModal = ({
   const { socket } = SocketConnection();
 
   const handleModalClose = () => {
-    setSelectedOption(null);
     onClose();
   };
 
   const handleOptionSelect = (option) => {
-    console.log("word selected: ", option);
     setSelectedOption(option);
     handleModalClose();
+    console.log("word selected option: ", option);
     socket.emit("wordSelected", option);
   };
 
@@ -27,24 +26,22 @@ const WordModal = ({
     return (
       <Modal.Body style={{ display: "flex", justifyContent: "center" }}>
         {words.map((word) => (
-          <Button
-            onClick={() => handleOptionSelect(word)}
-            active={selectedOption === word}
-            className="m-2 bg-gray-900"
-          >
-            {word}
-          </Button>
+          <div key={word}>
+            <Button
+              onClick={() => handleOptionSelect(word)}
+              active={selectedOption === word}
+              className="m-2 bg-gray-900"
+            >
+              {word}
+            </Button>
+          </div>
         ))}
       </Modal.Body>
     );
   };
 
   const renderModalHeader = () => {
-    return (
-      <Modal.Header>
-        <h2>Select Word</h2>
-      </Modal.Header>
-    );
+    return <Modal.Header>Select Word</Modal.Header>;
   };
 
   return (

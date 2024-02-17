@@ -17,8 +17,6 @@ function PlayersList({ playersInfo, shouldRenderHeader = true }) {
     );
   };
 
-  console.log({ pp: playersInfoReader.points(playersInfo[0]) });
-
   const renderRankList = () => {
     return (
       <List

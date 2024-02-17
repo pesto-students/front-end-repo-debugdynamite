@@ -1,7 +1,15 @@
 import React from "react";
 import { Modal } from "flowbite-react";
+import { GameState } from "../../../../context/GameContext";
 
 const ScoreModal = ({ userScores, isOpen, onClose }) => {
+  const { connectedUsers } = GameState();
+
+  const resultMap = connectedUsers.reduce((result, { uid, name }) => {
+    result[uid] = name;
+    return result;
+  }, {});
+
   const handleModalClose = () => {
     onClose();
   };
@@ -14,7 +22,7 @@ const ScoreModal = ({ userScores, isOpen, onClose }) => {
             key={user.userId}
             className="flex justify-between items-center p-2"
           >
-            <span>{user.userId}</span>
+            <span>{resultMap[user.userId]}</span>
             <span>{user.score}</span>
           </div>
         ))}

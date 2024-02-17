@@ -12,6 +12,31 @@ import { GameState } from "../../context/GameContext";
 import { useNavigate } from "react-router-dom";
 import { getPresentLeaderBoardRoute } from "../../constants/routes";
 
+function generateLeaderboardArray(userScores, connectedUsers) {
+  let scores = userScores;
+  if (scores.length === 0) {
+    scores = connectedUsers.map((user) => {
+      return { userId: user.uid, score: 0 };
+    });
+  }
+
+  const sortedUserScores = scores.sort((a, b) => b.score - a.score);
+
+  const result = sortedUserScores.map((userScore, index) => {
+    const connectedUser = connectedUsers.find(
+      (user) => user.uid === userScore.userId
+    );
+    return {
+      id: userScore.userId,
+      name: connectedUser ? connectedUser.name : "Unknown",
+      position: index + 1,
+      points: userScore.score,
+    };
+  });
+
+  return result;
+}
+
 function GameArea() {
   const navigate = useNavigate();
   const { socket } = SocketConnection();
@@ -24,9 +49,7 @@ function GameArea() {
 
   const [isWordsModalOpen, setIsWordsModalOpen] = useState(false);
   const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
-
   const [selectedWord, setSelectedWord] = useState(null);
-
   const [userScores, setUserScores] = useState([]);
 
   const selectedUserRef = useRef();
@@ -46,7 +69,6 @@ function GameArea() {
   useEffect(() => {
     if (socket) {
       // Listen for incoming messages from the server
-      console.log("host user: ", hostUser, "user: ", user);
       if (hostUser.uid === user.uid) {
         socket.emit("startRound");
       }
@@ -106,10 +128,14 @@ function GameArea() {
   };
 
   const renderInGameLeaderBoard = () => {
-    const playersPositionData = connectedUsers.map((user, index) => {
-      return { position: index, name: user?.name, points: 0 };
-    });
-    return <InGameLeaderboard playersPositionData={playersPositionData} />;
+    return (
+      <InGameLeaderboard
+        playersPositionData={generateLeaderboardArray(
+          userScores,
+          connectedUsers
+        )}
+      />
+    );
   };
 
   const renderMessages = () => {
@@ -183,7 +209,7 @@ function GameArea() {
 
   return (
     <>
-      <Header roomCode={roomCode} selectedWord={selectedWord} />
+      <Header roomCode={roomCode} />
       <Board />
       {renderLeaderBoardAndMessages()}
       {renderSendMessage()}

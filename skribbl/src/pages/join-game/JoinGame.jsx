@@ -42,7 +42,6 @@ function JoinGame() {
 
   const handleOtpVerification = () => {
     socket.emit("validateRoomCode", roomCodeValue);
-    console.log("otp verification called: ", roomCodeValue);
   };
 
   const handleProceed = () => {

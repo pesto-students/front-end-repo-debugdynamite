@@ -16,15 +16,10 @@ function GameDetails() {
   const { user } = UserAuth();
 
   const [entryFees, setEntryFees] = useState("");
-  const [numberOfRounds, setNumberOfRounds] = useState("");
   const [roundDuration, setRoundDuration] = useState("");
 
   const handleEntryFeesChange = (e) => {
     setEntryFees(e.target.value);
-  };
-
-  const handleNumberOfRoundsChange = (e) => {
-    setNumberOfRounds(e.target.value);
   };
 
   const handleRoundDurationChange = (e) => {
@@ -61,18 +56,6 @@ function GameDetails() {
             sizing="sm"
             value={entryFees}
             onChange={handleEntryFeesChange}
-          />
-        </div>
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="numberOfRounds" value="Number of rounds" />
-          </div>
-          <TextInput
-            id="numberOfRounds"
-            type="text"
-            sizing="sm"
-            value={numberOfRounds}
-            onChange={handleNumberOfRoundsChange}
           />
         </div>
         <div>

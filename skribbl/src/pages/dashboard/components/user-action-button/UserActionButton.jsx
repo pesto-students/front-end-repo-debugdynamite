@@ -7,10 +7,6 @@ function UserActionButton({
   label,
   onClick,
 }) {
-  const handleClick = () => {
-    alert("Click");
-  };
-
   let imgClassName =
     "w-14 h-14 rounded-full overflow-hidden flex justify-center items-center " +
     backgroundColor;
@@ -28,7 +24,7 @@ function UserActionButton({
   };
 
   return (
-    <button className="mx-4 flex flex-col items-center" onClick={handleClick}>
+    <button className="mx-4 flex flex-col items-center" onClick={onClick}>
       {renderIcon()}
       {renderLabel()}
     </button>

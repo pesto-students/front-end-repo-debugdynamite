@@ -16,8 +16,8 @@ function TopPlayers({ leaderboardData, displayPlayersMaxLength = 3 }) {
     <>
       <div className={headerClassName}>LEADERBOARD</div>
       <div className="flex justify-center">
-        {displayPlayers.map((player) => (
-          <div className="mx-6 flex flex-col items-center">
+        {displayPlayers.map((player, index) => (
+          <div key={index} className="mx-6 flex flex-col items-center">
             <Avatar
               img={playersInfoReader.profileUrl(player)}
               rounded

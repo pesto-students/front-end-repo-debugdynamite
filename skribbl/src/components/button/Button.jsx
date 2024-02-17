@@ -22,8 +22,6 @@ function Button({
 
   const buttonClass = `py-${paddingY} px-8 font-bold text-${textSize} ${buttonType} `;
 
-  console.log(buttonClass);
-
   return (
     <button className={buttonClass} onClick={onClick} disabled={isDisabled}>
       {children}
